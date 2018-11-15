@@ -27,18 +27,21 @@ int main(int argc, char **argv) {
     const int diam = 300;
     cairo_surface_t *surf;
     cairo_t *temp;
+    void *data;
 
     if (argc != 2)
         g_printerr("Usage: %s OUTPUT_FILE.png\n", argv[0]);
     else {
-        surf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, diam, diam);
-        cairo_set_source_rgb(temp = cairo_create(surf), 1.0, 1.0, 1.0);
-        cairo_paint(temp);
+        data = calloc(4 * diam, diam);
+        surf = cairo_image_surface_create_for_data
+                   (data, CAIRO_FORMAT_ARGB32, diam, diam, 4 * diam);
+        temp = cairo_create(surf);
         text(temp, diam, 7, "-Line-", "Sans Bold 30");
         cairo_destroy(temp);
         if (cairo_surface_write_to_png(surf, argv[1]) != CAIRO_STATUS_SUCCESS)
             g_printerr("Could not save png to '%s'\n", argv[1]);
         cairo_surface_destroy(surf);
+        free(data);
     }
     return 0;
 }
