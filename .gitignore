@@ -1,0 +1,5 @@
+# Ignore everything except the source, the project file, and the readme
+*
+!main.c
+!pango_cairo.cbp
+!README.md
